@@ -27,6 +27,25 @@ enum IpAddrDiffTypes {
     V6(String),
 }
 
+// In order to represent these as structs, you'd have to generate a QuitMessage, MoveMessage, etc.
+// instead of leveraging variants in an enum
+enum Message {
+    Quit,
+    Move { x: i32, y: i32 },
+    Write(String),
+    ChangeColor(i32, i32, i32),
+}
+
+// Similarly to structs, you have to utilize the impl keyword to create methods on them
+impl Message {
+    fn call(&self) {
+        match &self {
+            Message::Quit => { println!("QUITTER"); },
+            _ => {},
+        }
+    }
+}
+
 fn main() {
     /*
     * Represents the original implmentation above
@@ -64,4 +83,10 @@ fn main() {
     let _home_diff = IpAddrDiffTypes::V4(127,0,0,1);
     let _loopback_diff = IpAddrDiffTypes::V6(String::from("::1"));
     println!("Needing to specify the type of IP address utilized is so common, it exists in the standard library...\nSee std::net::IpAddr for its definition.");
+
+    let quit = Message::Quit;
+    let _movement = Message::Move { x: 3, y: 2};
+    let _hello = Message::Write(String::from("HELLO WORLD"));
+    let _color = Message::ChangeColor(32, 32, 147);
+    quit.call();
 }
