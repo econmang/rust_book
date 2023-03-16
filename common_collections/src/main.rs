@@ -78,4 +78,43 @@ fn main() {
         }
     }
     println!("Note: Dropping a vector drops its elements. When it goes out of scope, it is freed from memory.");
+
+    println!("s is a string created using String::new(). Then it is assigned to a new string value using the to_string() method.");
+    println!("Note: Any type that implements the Display trait can utilize the to_string() method.");
+    let mut s = String::new();
+    println!("Originally s is the empty str: {}", s);
+    let data = "initial contents";
+    s = data.to_string();
+    println!("s is then given the value: {}", s);
+    println!("String can also be initilaized by the String::from() method passed a string literal.");
+    let s = String::from("Initial contents.");
+    println!("s is then reinitialized with the String::from() method, yielding: {}", s);
+    println!("Note: Strings are UTF-8 encoded, so any properly encoded data can be sotred in them.");
+    println!("\nWe can grow a string using the push_str() method:");
+    let mut s1 = String::from("foo");
+    println!("s1: {s1}");
+    let s2 = "bar";
+    println!("s2: {s2}");
+    s1.push_str(s2);
+    println!("s1 after push_str: {s1}");
+    println!("We can also grow a string by pushing a character onto it with the push() method:");
+    let mut s3 = String::from("lo");
+    println!("s3 before 'l' is pushed: {s3}");
+    s3.push('l');
+    println!("s3 after 'l' is pushed: {s3}");
+    println!("If you have two variables of the same type, you can also use the + operator to combine them:");
+    let s4 = String::from("Hello, ");
+    let s5 = String::from("world!");
+    println!("s4: {}, s5: {}", &s4, &s5);
+    println!("s4 + s5 = {}", s4 + &s5);
+
+    println!("\nThe format! operator can also aid in creating format strings to display string data:");
+    let s1 = String::from("tic");
+    let s2 = String::from("tac");
+    let s3 = String::from("toe");
+    let s4 = format!("{s1}-{s2}-{s3}");
+    println!("Formatted string that delimited three string values with hyphens: {}", s4);
+    println!("Indexing into strings is not directly available. You can the byte as a u8 for the char and then convert it... but difficult.");
+
+
 }
