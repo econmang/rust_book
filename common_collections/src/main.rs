@@ -5,6 +5,8 @@
 *           structure called map
 * */
 
+use std::collections::HashMap;
+
 enum SpreadsheetCell {
     Int(i32),
     Float(f64),
@@ -116,5 +118,69 @@ fn main() {
     println!("Formatted string that delimited three string values with hyphens: {}", s4);
     println!("Indexing into strings is not directly available. You can the byte as a u8 for the char and then convert it... but difficult.");
 
+    let s1 = String::from("hello");
+   /* let h = s1[0]; // This will throw an error because you cannot directly index a String
+    * Internally, a String is a wrapper over a Vec<u8> based on the UTF-8 encoding of the String
+    * The byte length of a String w/ value Hola is 4
+    * But the byte length of a String w/ value Здравствуйте is 24 because it takes that many bytes
+    * to encode the Cyrillic letters.
+    *
+    * Strings can be viewed from the perspective of bytes, scalar values, and grapheme clusters
+    * (the closest thing to what we would call letters).
+    *
+    */
 
+    // Slicing Strings
+    println!("Original String: {}", &s1);
+    println!("Slice from 0 - 2 (non-inclusive): {}", &s1[0..2]);
+
+    // Methods for iterating over strings:
+    let string_to_iterate = String::from("Здравствуйте");
+    println!("\nFull String to iterate through: {}", &string_to_iterate);
+    println!("Iterating utilizing the .chars() method:");
+    for c in string_to_iterate.chars() {
+        println!("{c}");
+    }
+    println!("\nItereating utilizing the .bytes() method:");
+    for b in string_to_iterate.bytes() {
+        println!("{b}");
+    }
+
+    println!("\nHash Maps:");
+    let mut scores = HashMap::new();
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Yellow"), 50);
+
+    println!("State of HashMap created with the ::new() method and having two key/value pairs inserted into it:");
+    for score in &scores {
+        println!("{}: {}", score.0, score.1);
+    }
+    println!("Note: We pulled an individual name requiring us to iterate and then pull score.0 and score.1 to get the key/value pair.");
+    println!("\nWe can also iterate using an aliased tuple like (key, value) to pull from the HashMap:");
+    for (key, value) in &scores {
+        println!("{key}: {value}");
+    }
+
+    println!("\nGrabbing a value from the hashmap using the get() method:");
+    let team_name = String::from("Blue");
+    let score = scores.get(&team_name).copied().unwrap_or(0);
+    println!("Key passed: {team_name}; Score retrieved: {score}");
+    println!("Note: Values that implement the Copy trait, like i32, will be copied in tot he HashMap upon insert. Owned values (like Strings) will be moved and the HashMap will become the owner.");
+
+    println!("\nTo update a HashMap, you can just insert the same key and it will overwrite the previous value:");
+    println!("Original Scores: {:?}", scores);
+    scores.insert(String::from("Blue"), 25);
+    println!("Scores after inserting a new val for \"Blue\": {:?}", scores);
+    println!("\nYou can also update value based on the old value:");
+    let text = "hello world wonderful world";
+    let mut map = HashMap::new();
+    for word in text.split_whitespace() {
+        let count =  map.entry(word).or_insert(0);
+        *count += 1;
+    }
+    // split_whitespace() returns slices of the string based on where the whitespace is.
+    // or_insert returns a mutable reference (&mut V) to the value of the specified key
+    // We dereference the count using the (*) asterisk to change the direct value
+    // The mut ref goes out of scope after the end of the loop, making it safe/allowed borrowing
+    println!("Map after looping through words and counting the instances of each: {:?}", map);
 }
