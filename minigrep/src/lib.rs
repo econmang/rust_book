@@ -56,7 +56,7 @@ pub mod parser {
 
         for line in contents.lines() {
             if line.to_lowercase().contains(&query) {
-                results.push(line);
+                results.push(line.trim());
             }
         }
 
@@ -84,7 +84,8 @@ mod tests {
         let contents = "\
         Rust:
         safe, fast, productive.
-        Pick three.";
+        Pick three.
+        Trust me.";
         assert_eq!(vec!["Rust:", "Trust me."],
             parser::search_case_insensitive(query, contents)
         );
