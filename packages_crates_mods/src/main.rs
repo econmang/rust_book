@@ -39,6 +39,13 @@ use rand::Rng;
 // With the glob operator, we can bring all public items defined in a path into scope
 use std::collections::*;
 
+/// Three slashes are used to create documentation comments
+///
+/// This project is just used to house examples of creating mods and crates and pulling them into
+/// scope.
+///
+/// You can open the documentation for a project using cargo doc --open
+
 fn main() {
     serving::take_order();
     serving::take_payment();
@@ -47,3 +54,5 @@ fn main() {
     // pulled in by the collections glob
     let _h_map = HashMap::from([("a",2)]);
 }
+
+

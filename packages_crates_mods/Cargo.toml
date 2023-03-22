@@ -1,3 +1,21 @@
+# A workspace is a set of packages that share the same Cargo.lock and output directory.
+#[workspace]
+#members = [
+#    "packages_crates_mods"
+#]
+#
+# For the packages assigned to the workspace, you'd can put a reference to another package under the [dependencies] heading
+
+
+# Release profiles are predefined and cusomizable profiles with diff configs to have more control over various options for compiling
+# [profile.dev]
+# opt-level = 0
+
+# metadata about your crate can be added in the Cargo.toml [package] section as below.
+# You can use the cargo publish command to publish a uniquely named crate on crates.io
+# But, you must also specify a license field (i.e. license = "MIT") before publication
+# Updating the version number will allow you to update an existing crate
+# You can also use `cargo yank` to pull a deprecated version of a crate from crates.io
 [package]
 name = "packages_crates_mods"
 version = "0.1.0"
@@ -7,3 +25,8 @@ edition = "2021"
 
 [dependencies]
 rand = "0.8.5"
+
+# Cargo was designed to be extensible
+# `cargo install` can be used to install Rust binaries
+# If a rust binary is in your $PATH, you can call it like cargo binary_name
+# Custom commands can be found using cargo --list
