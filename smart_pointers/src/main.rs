@@ -10,7 +10,31 @@ enum List {
     Nil,
 }
 
+use std::rc::Rc;
+use std::cell::RefCell;
+
+enum RcList {
+    RcCons(i32, Rc<RcList>),
+    RcNil,
+}
+
+#[derive(Debug)]
+enum RefCellList {
+    RefCellCons(Rc<RefCell<i32>>, Rc<RefCellList>),
+    RefCellNil,
+}
+
+/*
+* Interior mutability is a design pattern in Rust that allows you to mutate data even when there
+* are immutable references to that data. This can be done using the RefCell<T> smart pointer type.
+* Note: Rc and RefCell can only be used in single-threaded instances
+*
+* 
+* */
+
 use crate::List::{Cons, Nil};
+use crate::RcList::{RcCons, RcNil};
+use crate::RefCellList::{RefCellCons, RefCellNil};
 
 // Defining our own smart pointer: 
 struct MyBox<T>(T);
@@ -51,6 +75,7 @@ impl Drop for CustomSmartPointer {
     }
 }
 
+
 fn main() {
     /*
     * Boxes are used when: 
@@ -88,7 +113,7 @@ fn main() {
     let c = CustomSmartPointer {
         data: String::from("my stuff"),
     };
-    let d = CustomSmartPointer {
+    let _d = CustomSmartPointer {
         data: String::from("other stuff"),
     };
     println!("CustomSmartPointers created.");
@@ -98,4 +123,42 @@ fn main() {
     // Instead, we can use std::mem::drop func
     drop(c);
     println!("CustomSmartPointer dropped before the end of main.");
+
+    /*
+    * In the case of a graph data structure, multiple edges point to the same node, meaning you'd
+    * need more than one reference to a value.
+    * For this use case we'd use a reference counting smart pointer Rc<T>. It keeps a count of how
+    * many references are made to it so you can deallocate it once it no longer has any references.
+    * */
+    let a = Rc::new(RcCons(5, Rc::new(RcCons(10, Rc::new(RcNil)))));
+    println!("count after creating a = {}", Rc::strong_count(&a));
+    //Rc::clone increases the reference count for `a`
+    let _b = RcCons(3, Rc::clone(&a));
+    println!("count after creating b = {}", Rc::strong_count(&a));
+    {
+        let _c = RcCons(4, Rc::clone(&a));
+        println!("count afer c goes out of scope = {}", Rc::strong_count(&a));
+    }
+    println!("count afer c goes out of scope = {}", Rc::strong_count(&a));
+
+    // This below would fail because x is not mutable but y is making a mut reference to it.
+    //let x = 5;
+    //let y = &mut x;
+    // Having mutliple owners of mutable data by combining Rc<T> and RefCell<T>
+    let value = Rc::new(RefCell::new(5));
+
+    let a = Rc::new(RefCellCons(Rc::clone(&value), Rc::new(RefCellNil)));
+
+    let b = Rc::new(RefCellCons(Rc::new(RefCell::new(3)), Rc::clone(&a)));
+    let c = Rc::new(RefCellCons(Rc::new(RefCell::new(4)), Rc::clone(&a)));
+
+    *value.borrow_mut() += 10;
+
+    println!("a after = {:?}", a);
+    println!("b after = {:?}", b);
+    println!("c after = {:?}", c);
+
+    // Note: Even with Rust's memory safety guarantees, you can still leak memory.
+    // By creating a refernce cycle, you can leak memory
+    // To avoid cycles, you can utilize Weak<T> instead of Rc<T> using a Rc::downgrade call
 }
