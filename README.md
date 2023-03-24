@@ -14,3 +14,4 @@ Housing some projects/notes as I work through the Rust Book.
 - Chapter 13: functional_features
 - Chapter 14: packages_crates_mods
 - Chapter 15: smart_pointers
+- Chapter 16: fearless_concurrency
