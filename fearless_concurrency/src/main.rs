@@ -1,6 +1,8 @@
+//use std::rc::Rc;
+use std::sync::mpsc;
+use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
-use std::sync::mpsc;
 
 fn main() {
     /*
@@ -112,7 +114,7 @@ fn main() {
         ];
         for val in vals {
             tx.send(val).unwrap();
-            thread::sleep(Duration::from_secs(1));
+            thread::sleep(Duration::from_millis(200));
         }
         // you can't use val after it is sent out of the thread:
         // println!("val is {}, val"); //This line would fail
@@ -141,7 +143,7 @@ fn main() {
 
         for val in vals {
             tx1.send(val).unwrap();
-            thread::sleep(Duration::from_secs(1));
+            thread::sleep(Duration::from_millis(200));
         }
     });
     thread::spawn(move || {
@@ -154,13 +156,46 @@ fn main() {
 
         for val in vals {
             tx.send(val).unwrap();
-            thread::sleep(Duration::from_secs(1));
+            thread::sleep(Duration::from_millis(200));
         }
     });
 
     for received in rx {
         println!("Received from spawned threads: {received}");
     }
+    // END
 
+    // START
+    println!("\nMutex example; updating a value:");
+    let m = Mutex::new(5);
+    {
+        let mut num = m.lock().unwrap();
+        *num = 6;
+    }
+    println!("Mutex m value after update: {:?}", m);
+    // END
+
+    // START
+    println!("\nSharing a mutex value between threads:");
+    // Rc<T> is limited to only single threaded situations
+    // Arc<T> is a tyle similar that can be used safely in concurrenct situations.
+    // Note; A on Arc stands for atomic, so it's an atomically reference counted type
+    let counter = Arc::new(Mutex::new(0));
+    let mut handles = vec![];
+
+    for _ in 0..10 {
+        let counter = Arc::clone(&counter);
+        let handle = thread::spawn(move || {
+            let mut num = counter.lock().unwrap();
+
+            *num += 1;
+        });
+        handles.push(handle);
+    }
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
+    println!("Result after spawning 10 threads to handle the mutex value: {}", *counter.lock().unwrap());
     // END
 }
