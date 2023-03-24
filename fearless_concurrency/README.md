@@ -1,0 +1,19 @@
+## What We're Covering
+
+Concurrent Programming: Where different parts of a program execute independently.
+Parallel Programming: Where different parts of a program execute at the same time.
+
+We will cover:
+- How to create threads to run multiple pieces of code at the same time
+- Message-parsing Concurrency: Where channels send messages between threads
+- Shared-state Concurrency: Where multiple threads have access to some piece of data
+- The `Sync` and `Send` traits, which extend Rust's concurrency guarantees to user-defined types as well as types provided by the std lib.
+
+## Using Threads to Run Code Simultaneously
+
+Process: An executed program's code running in the OS.
+Threads: OS spawned executive processes that can be used to run independent parts of the overall process.
+
+Running multiple threads can lead to: Race Conditions, Deadlocks, and other bugs.
+Message passing: Where threads or actors communicate by sending each other messages containing data.
+                 A channel is closed if either the transmitter or receiver half is dropped.
