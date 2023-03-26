@@ -15,4 +15,5 @@ Housing some projects/notes as I work through the Rust Book.
 - Chapter 14: packages_crates_mods
 - Chapter 15: smart_pointers
 - Chapter 16: fearless_concurrency
-- Chapter 17: object_oriented_feats
+- Chapter 17: object_oriented_feats (notes & blog project)
+- Chapter 17: gui (screen draw project)
