@@ -17,3 +17,4 @@ Housing some projects/notes as I work through the Rust Book.
 - Chapter 16: fearless_concurrency
 - Chapter 17: object_oriented_feats (notes & blog project)
 - Chapter 17: gui (screen draw project)
+- Chapter 18: patterns_and_matching 
