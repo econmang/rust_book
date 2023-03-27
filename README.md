@@ -19,3 +19,4 @@ Housing some projects/notes as I work through the Rust Book.
 - Chapter 17: gui (screen draw project)
 - Chapter 18: patterns_and_matching 
 - Chapter 19: advanced_features
+- Chapter 20: hello
